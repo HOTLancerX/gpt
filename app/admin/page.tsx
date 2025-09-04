@@ -1,6 +1,5 @@
 "use client"
 import { useState, useEffect } from "react"
-import Sidebar from "./Sidebar"
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -57,7 +56,6 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="flex">
-        <Sidebar />
         <div className="flex-1 flex items-center justify-center min-h-screen">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
@@ -66,10 +64,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <Sidebar />
-
-      <div className="flex-1 p-8">
+      <div className="w-full">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
           <p className="text-gray-600">Welcome back! Here's what's happening with your CMS.</p>
@@ -291,6 +286,5 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
-    </div>
   )
 }
