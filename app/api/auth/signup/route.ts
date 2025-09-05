@@ -4,9 +4,9 @@ import bcrypt from "bcryptjs"
 
 export async function POST(request: NextRequest) {
   try {
-    console.log("[v0] Signup attempt started")
+    console.log("Signup attempt started")
     const { name, email, phone, slug, password } = await request.json()
-    console.log("[v0] Signup data received:", {
+    console.log("Signup data received:", {
       name: name ? "provided" : "missing",
       email: email ? "provided" : "missing",
       phone: phone ? "provided" : "missing",
@@ -15,30 +15,30 @@ export async function POST(request: NextRequest) {
     })
 
     if (!name || !email || !password) {
-      console.log("[v0] Missing required fields")
+      console.log("Missing required fields")
       return NextResponse.json({ error: "Name, email and password required" }, { status: 400 })
     }
 
-    console.log("[v0] Attempting database connection")
+    console.log("Attempting database connection")
     const db = await getDb()
-    console.log("[v0] Database connected successfully")
+    console.log("Database connected successfully")
 
     // Check if user already exists
-    console.log("[v0] Checking for existing user")
+    console.log("Checking for existing user")
     const existingUser = await db.collection("users").findOne({
       $or: [{ email }, { phone }, { slug }],
     })
-    console.log("[v0] Existing user found:", existingUser ? "yes" : "no")
+    console.log("Existing user found:", existingUser ? "yes" : "no")
 
     if (existingUser) {
-      console.log("[v0] User already exists")
+      console.log("User already exists")
       return NextResponse.json({ error: "User already exists" }, { status: 400 })
     }
 
-    console.log("[v0] Hashing password")
+    console.log("Hashing password")
     const hashedPassword = await bcrypt.hash(password, 12)
 
-    console.log("[v0] Creating new user")
+    console.log("Creating new user")
     const result = await db.collection("users").insertOne({
       name,
       email,
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
       info: [{ bio: "", tagline: "" }],
       createdAt: new Date(),
     })
-    console.log("[v0] User created with ID:", result.insertedId)
+    console.log("User created with ID:", result.insertedId)
 
     return NextResponse.json({
       success: true,
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
       id: result.insertedId,
     })
   } catch (error) {
-    console.error("[v0] Signup error:", error)
+    console.error("Signup error:", error)
     return NextResponse.json(
       { error: "Signup failed", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 },

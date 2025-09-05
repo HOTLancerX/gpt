@@ -1,3 +1,4 @@
+//lib/db.ts
 import { MongoClient, type Db } from "mongodb"
 
 const getUri = () => {
@@ -42,7 +43,7 @@ export async function getDb(): Promise<Db> {
     const client = await clientPromise
     return client.db()
   } catch (error) {
-    console.error("[v0] Database connection error:", error)
+    console.error("Database connection error:", error)
     throw error
   }
 }
