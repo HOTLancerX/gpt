@@ -84,14 +84,24 @@ function AdminSidebar({
               <span className="font-bold text-gray-900">Admin CMS</span>
             </div>
           )}
-          <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-1 rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
+          <div className="flex items-center">
+            {!isCollapsed && (
+              <Link
+                href="/"
+                target="_blank"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5"><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/><path d="M14.828 19.071c-.371.929-.812 1.665-1.297 2.168c-.486.502-1.006.761-1.531.761s-1.045-.259-1.53-.761c-.486-.503-.927-1.24-1.298-2.168c-.372-.929-.667-2.03-.868-3.244A23.6 23.6 0 0 1 8 12c0-1.313.103-2.614.304-3.827s.496-2.315.868-3.244c.371-.929.812-1.665 1.297-2.168C10.955 2.26 11.475 2 12 2s1.045.259 1.53.761c.486.503.927 1.24 1.298 2.168c.372.929.667 2.03.867 3.244C15.897 9.386 16 10.687 16 12s-.104 2.614-.305 3.827M2 12h8m12 0h-8"/></g></svg>
+              </Link>
+            )}
+            <button
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className="p-1 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Navigation */}
@@ -113,42 +123,39 @@ function AdminSidebar({
                 </li>
               )
             })}
-          </ul>
-        </nav>
-
-        {/* Footer / Profile */}
-        <div className="p-4 border-t border-gray-200">
-          <div className="flex items-center space-x-3">
-            <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
-              {user?.photo ? (
-                <img className="h-10 w-10 rounded-full object-cover" src={user.photo} alt={user.name} />
-              ) : (
-                <span className="text-sm font-medium text-gray-700">{user?.name?.charAt(0) || "A"}</span>
-              )}
-            </div>
-            {!isCollapsed && (
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate">{user?.name || "Admin"}</p>
-                <p className="text-xs text-gray-500 truncate">{user?.email || "admin@example.com"}</p>
-              </div>
-            )}
-          </div>
-          {!isCollapsed && (
-            <div className="mt-3 space-y-1">
-              <Link
+            <Link
                 href="/me"
                 className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <span>My Account</span>
               </Link>
-              <button
-                onClick={onLogout}
-                className="flex items-center space-x-2 px-3 py-2 text-sm text-red-600 rounded-lg hover:bg-red-50 transition-colors w-full text-left"
-              >
-                <span>Logout</span>
+          </ul>
+        </nav>
+
+        {/* Footer / Profile */}
+        <div className="p-4 border-t border-gray-200">
+          <div className="flex items-center justify-between">
+            {!isCollapsed && (
+              <div className="flex items-center space-x-3">
+                <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
+                  {user?.photo ? (
+                    <img className="h-10 w-10 rounded-full object-cover" src={user.photo} alt={user.name} />
+                  ) : (
+                    <span className="text-sm font-medium text-gray-700">{user?.name?.charAt(0) || "A"}</span>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 truncate">{user?.name || "Admin"}</p>
+                  <p className="text-xs text-gray-500 truncate">{user?.email || "admin@example.com"}</p>
+                </div>
+                </div>
+              )}
+              <button onClick={onLogout} className="text-red-600 hover:text-red-300">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
               </button>
-            </div>
-          )}
+          </div>
         </div>
       </div>
 
