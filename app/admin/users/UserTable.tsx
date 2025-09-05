@@ -1,5 +1,7 @@
 "use client"
 
+import Image from "next/image"
+
 interface User {
   _id: string
   name: string
@@ -34,13 +36,13 @@ export default function UserTable({ users, onEdit, onDelete, onToggleStatus }: U
             <tr key={user._id}>
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="flex items-center">
-                  {user.photo && (
-                    <img
-                      className="h-10 w-10 rounded-full mr-4"
-                      src={user.photo || "/placeholder.svg"}
-                      alt={user.name}
-                    />
-                  )}
+                  <Image
+                    className="h-10 w-10 rounded-full mr-4"
+                    src={user.photo || "/placeholder.svg"}
+                    alt={user.name}
+                    width={40}
+                    height={40}
+                  />
                   <div className="text-sm font-medium text-gray-900">{user.name}</div>
                 </div>
               </td>

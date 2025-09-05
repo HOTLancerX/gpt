@@ -1,6 +1,8 @@
+//app/api/auth/signup/route.ts
 import { type NextRequest, NextResponse } from "next/server"
 import { getDb } from "@/lib/db"
 import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken"
 
 export async function POST(request: NextRequest) {
   try {
@@ -39,7 +41,7 @@ export async function POST(request: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, 12)
 
     console.log("Creating new user")
-    const result = await db.collection("users").insertOne({
+    const newUser = {
       name,
       email,
       phone: phone || "",
@@ -50,13 +52,27 @@ export async function POST(request: NextRequest) {
       status: "active",
       info: [{ bio: "", tagline: "" }],
       createdAt: new Date(),
-    })
+    }
+    
+    const result = await db.collection("users").insertOne(newUser)
     console.log("User created with ID:", result.insertedId)
+
+    // Generate JWT token for automatic login
+    console.log("Generating JWT token for automatic login")
+    const token = jwt.sign(
+      { userId: result.insertedId, email: newUser.email, type: newUser.type },
+      process.env.JWT_SECRET || "secret",
+      { expiresIn: "7d" },
+    )
+
+    // Remove password from user object before returning
+    const { password: _, ...userWithoutPassword } = newUser
 
     return NextResponse.json({
       success: true,
       message: "User created successfully",
-      id: result.insertedId,
+      token,
+      user: { ...userWithoutPassword, _id: result.insertedId },
     })
   } catch (error) {
     console.error("Signup error:", error)

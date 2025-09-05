@@ -5,6 +5,29 @@ import GitHubProvider from "next-auth/providers/github"
 import { getDb } from "./db"
 import bcrypt from "bcryptjs"
 
+// Extend the built-in session types
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string
+      email: string
+      name?: string | null
+      image?: string | null
+      type: string
+    }
+  }
+  
+  interface User {
+    type: string
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    type?: string
+  }
+}
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -54,20 +77,20 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.type = user.type
+        token.type = (user as any).type
       }
       return token
     },
     async session({ session, token }) {
-      if (token) {
+      if (token && token.sub) {
         session.user.id = token.sub
-        session.user.type = token.type
+        session.user.type = token.type as string
       }
       return session
     },
   },
   pages: {
     signIn: "/auth/signin",
-    signUp: "/auth/signup",
+    //signUp: "/auth/signup",
   },
 }

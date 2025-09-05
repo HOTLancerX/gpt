@@ -32,10 +32,10 @@ export default function Auth({ onClose }: AuthProps) {
       const data = await response.json()
 
       if (data.success) {
-        if (activeTab === "login") {
-          localStorage.setItem("token", data.token)
-          localStorage.setItem("user", JSON.stringify(data.user))
-        }
+        // Store token and user data for both login and signup
+        localStorage.setItem("token", data.token)
+        localStorage.setItem("user", JSON.stringify(data.user))
+        
         window.location.reload()
         onClose()
       } else {
