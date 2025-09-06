@@ -254,7 +254,7 @@ export default function UserDashboard() {
               </svg>
             </div>
             <div>
-              <h3 className="font-medium text-gray-900">Refresh Data</h3>
+              <h3 className="font-medium text-gray-900 text-left">Refresh Data</h3>
               <p className="text-sm text-gray-600">Update dashboard</p>
             </div>
           </button>
@@ -278,7 +278,7 @@ export default function UserDashboard() {
               </svg>
             </div>
             <div>
-              <h3 className="font-medium text-gray-900">Logout</h3>
+              <h3 className="font-medium text-gray-900 text-left">Logout</h3>
               <p className="text-sm text-gray-600">Sign out safely</p>
             </div>
           </button>

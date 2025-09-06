@@ -76,9 +76,8 @@ export default function AdminSettingsPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div>
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Admin Settings</h1>
-
       <div className="space-y-6">
         <Text name="site" value={site} onChange={setSite} />
         <Text name="title" value={title} onChange={setTitle} />

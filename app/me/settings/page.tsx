@@ -1,10 +1,22 @@
 "use client"
 import { useState, useEffect } from "react"
 import type React from "react"
+import type { User, UserInfo } from "@/types/user"
+
+interface UserSettingsFormData {
+  name: string
+  email: string
+  phone?: string
+  slug?: string
+  photo?: string
+  type: "user" | "admin"
+  status: "active" | "inactive" | string
+  info: UserInfo[]
+}
 
 export default function UserSettingsPage() {
-  const [user, setUser] = useState<any>(null)
-  const [formData, setFormData] = useState<any>({
+  const [user, setUser] = useState<User | null>(null)
+  const [formData, setFormData] = useState<UserSettingsFormData>({
     name: "",
     email: "",
     phone: "",
@@ -18,7 +30,7 @@ export default function UserSettingsPage() {
   useEffect(() => {
     const userData = localStorage.getItem("user")
     if (userData) {
-      const parsedUser = JSON.parse(userData)
+      const parsedUser: User = JSON.parse(userData)
       setUser(parsedUser)
 
       setFormData({
@@ -27,14 +39,14 @@ export default function UserSettingsPage() {
         phone: parsedUser.phone || "",
         slug: parsedUser.slug || "",
         photo: parsedUser.photo || "",
-        type: parsedUser.type || "user",
+        type: parsedUser.type === "admin" ? "admin" : "user",
         status: parsedUser.status || "active",
         info: parsedUser.info || [],
       })
     }
   }, [])
 
-  const handleInfoChange = (index: number, key: string, value: string) => {
+  const handleInfoChange = (index: number, key: keyof UserInfo, value: string) => {
     const newInfo = [...formData.info]
     if (!newInfo[index]) newInfo[index] = {}
     newInfo[index][key] = value
@@ -56,7 +68,7 @@ export default function UserSettingsPage() {
 
       if (data.success) {
         alert("Settings updated successfully")
-        const updatedUser = { ...user, ...formData }
+        const updatedUser: User = { ...user, ...formData }
         localStorage.setItem("user", JSON.stringify(updatedUser))
         setUser(updatedUser)
       } else {
@@ -70,11 +82,10 @@ export default function UserSettingsPage() {
 
   if (!user) return <div>Loading...</div>
 
-  // User cannot change type if they are not an admin
   const isAdmin = user.type === "admin"
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div>
       <h1 className="text-3xl font-bold text-gray-900 mb-8">User Settings</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -85,13 +96,13 @@ export default function UserSettingsPage() {
         <InputField label="Email" value={formData.email} onChange={(v) => setFormData({ ...formData, email: v })} />
 
         {/* Phone */}
-        <InputField label="Phone" value={formData.phone} onChange={(v) => setFormData({ ...formData, phone: v })} />
+        <InputField label="Phone" value={formData.phone || ""} onChange={(v) => setFormData({ ...formData, phone: v })} />
 
         {/* Slug */}
-        <InputField label="Slug" value={formData.slug} onChange={(v) => setFormData({ ...formData, slug: v })} />
+        <InputField label="Slug" value={formData.slug || ""} onChange={(v) => setFormData({ ...formData, slug: v })} />
 
         {/* Photo URL */}
-        <InputField label="Photo URL" value={formData.photo} onChange={(v) => setFormData({ ...formData, photo: v })} />
+        <InputField label="Photo URL" value={formData.photo || ""} onChange={(v) => setFormData({ ...formData, photo: v })} />
 
         {/* Type (user/admin) */}
         {isAdmin && (
@@ -100,9 +111,7 @@ export default function UserSettingsPage() {
             <select
               className="w-full p-3 border rounded-lg"
               value={formData.type}
-              onChange={(e) =>
-                setFormData({ ...formData, type: e.target.value as "user" | "admin" })
-              }
+              onChange={(e) => setFormData({ ...formData, type: e.target.value as "user" | "admin" })}
             >
               <option value="user">User</option>
               <option value="admin">Admin</option>
@@ -116,7 +125,7 @@ export default function UserSettingsPage() {
           <select
             className="w-full p-3 border rounded-lg"
             value={formData.status}
-            onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+            onChange={(e) => setFormData({ ...formData, status: e.target.value as "active" | "inactive" })}
           >
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
@@ -124,7 +133,7 @@ export default function UserSettingsPage() {
         </div>
 
         {/* Info fields dynamically */}
-        {formData.info.map((infoItem: any, index: number) => (
+        {formData.info.map((infoItem, index) => (
           <div key={index} className="space-y-4">
             <InputField
               label="Bio"
