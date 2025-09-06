@@ -33,9 +33,7 @@ export default function Users() {
           onClick={() => setShowDropdown(!showDropdown)}
           className="flex items-center space-x-2 text-gray-700 hover:text-gray-900"
         >
-          {user.photo && (
-            <Image width={50} height={50} src={user.photo || "/placeholder.svg"} alt={user.name} className="w-8 h-8 rounded-full" />
-          )}
+          <Image width={50} height={50} src={user.photo || "/placeholder.svg"} alt={user.name} className="w-8 h-8 rounded-full" />
           <span>{user.name}</span>
         </button>
 
@@ -48,6 +46,14 @@ export default function Users() {
             >
               My Account
             </Link>
+            {user?.type === "admin" && (
+              <Link
+                href="/admin"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                Admin Panel
+              </Link>
+            )}
             <button
               onClick={handleLogout}
               className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
